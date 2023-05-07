@@ -3,19 +3,29 @@ using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Net.Http;
 using System.Text;
+using System.Text.RegularExpressions;
 using Microsoft.EntityFrameworkCore;
 using var dbContext = new MyDbContext();
 
+string[] files = Directory.GetFiles("wwwroot/friends", "*.srt");
 
-string content = await ParseSRT("wwwroot/test.srt");
-List<Translate>? list = await Translate(content);
-dbContext.Translates.AddRange(list);
-dbContext.SaveChanges();
+foreach (var filePath in files)
+{
+
+    string fileName = Path.GetFileName(filePath);
+    MatchCollection matches = Regex.Matches(fileName, @"(?<=\()[^)]+(?=\))");
+    int Session = int.Parse(fileName.Split(" ")[0]);
+    int Capture = int.Parse(matches[0].Value);
+
+    string content = await ParseSRT(filePath);
+    List<Translate>? list = await Translate(content, Session, Capture);
+    await dbContext.Translates.AddRangeAsync(list);
+    await dbContext.SaveChangesAsync();
+    File.Delete(filePath);
+}
 
 
-
-
-async Task<List<Translate>?> Translate(string text)
+async Task<List<Translate>?> Translate(string text, int Session, int Capture)
 {
 
     var url = $"https://translate.google.com/translate_a/single?client=at&dt=t&dt=ld&dt=qca&dt=rm&dt=bd&dj=1&hl=es-ES&ie=UTF-8&oe=UTF-8&inputm=2&otf=2&iid=1dd3b944-fa62-4b55-b330-74909a99969e&sl=en&tl=fa&q={text}";
@@ -31,7 +41,9 @@ async Task<List<Translate>?> Translate(string text)
     return jsonContent?.sentences.Select(x => new Translate
     {
         Content = x.orig,
-        Trans = x.trans
+        Trans = x.trans,
+        Session = Session,
+        Capture = Capture
     }).ToList();
 
 }
@@ -139,5 +151,8 @@ public class Translate
     public int ID { get; set; }
     public string Content { get; set; }
     public string Trans { get; set; }
+    public int Session { get; set; }
+    public int Capture { get; set; }
 }
+
 
