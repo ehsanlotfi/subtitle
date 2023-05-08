@@ -1,13 +1,25 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Threading.Tasks;
+using GTranslate.Translators;
+using GTranslate.Results;
+using System.Diagnostics;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+
 using var dbContext = new MyDbContext();
 
 string[] files = Directory.GetFiles("wwwroot/friends", "*.srt");
+
+var translator = new AggregateTranslator();
+
+
 
 foreach (var filePath in files)
 {
@@ -18,33 +30,39 @@ foreach (var filePath in files)
     int Capture = int.Parse(matches[0].Value);
 
     string content = await ParseSRT(filePath);
-    List<Translate>? list = await Translate(content, Session, Capture);
+    List<Translate>? list = await setTranslate(content, Session, Capture);
     await dbContext.Translates.AddRangeAsync(list);
     await dbContext.SaveChangesAsync();
-    File.Delete(filePath);
 }
 
 
-async Task<List<Translate>?> Translate(string text, int Session, int Capture)
+
+
+async Task<List<Translate>?> setTranslate(string text, int Session, int Capture)
 {
 
-    var url = $"https://translate.google.com/translate_a/single?client=at&dt=t&dt=ld&dt=qca&dt=rm&dt=bd&dj=1&hl=es-ES&ie=UTF-8&oe=UTF-8&inputm=2&otf=2&iid=1dd3b944-fa62-4b55-b330-74909a99969e&sl=en&tl=fa&q={text}";
+    string[] textLines = text.Split('\n');
+    text = string.Join('\n', textLines.Where(line => !string.IsNullOrWhiteSpace(line)));
 
-    var client = new HttpClient();
-    var request = new HttpRequestMessage(HttpMethod.Get, url);
-    request.Headers.Add("Cookie", "NID=511=sE2Z8aUX7eMGyRx1QXHRX15BVmYnYr1klE4attPUlZdud1JfcqM2REpA9QXKxyFGXF0Qg-g5L4HYv0KQOhqqYSDMc9dY72wHLJqlvgDRYted9ZgFXWBrfcQhfULZpT0GsH4MZ0GLGzP5jLe4bllAyXBmKqMY1qfB5NPpfw-MueM");
-    var response = await client.SendAsync(request);
-    response.EnsureSuccessStatusCode();
+    ITranslationResult result = await translator.TranslateAsync(text, "Persian", "English");
+    string[] SourceList = result.Source.Split('\n');
+    string[] TranslationList = result.Translation.Split('\n');
+    List<Translate> finalResult = new List<Translate>();
 
-    var jsonContent = await response.Content.ReadFromJsonAsync<TranslateResult>();
-
-    return jsonContent?.sentences.Select(x => new Translate
+    for (int i = 0; i < SourceList.Count(); i++)
     {
-        Content = x.orig,
-        Trans = x.trans,
+        finalResult.Add( new Translate
+        {
+        Content = SourceList[i].Replace("\r", ""),
+        Trans = TranslationList[i].Replace("\r", ""),
         Session = Session,
         Capture = Capture
-    }).ToList();
+        });
+    }
+
+    await Task.Delay(2000);
+
+    return finalResult;
 
 }
 
