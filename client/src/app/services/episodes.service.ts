@@ -43,7 +43,7 @@ export class EpisodesService {
   constructor() { }
 
   getEpisodes(seasonId: string): _mod.Episode[] {
-    return this.episodes.filter(episode => episode.seasonId.toString() === seasonId);
+    return this.episodes;
   }
 
 }
