@@ -1,0 +1,7 @@
+<ul>
+  <li *ngFor="let season of seasons">
+    <a routerLink="/seasons/{{ season.id }}/episodes" routerLinkActive="active">
+      Season {{ season.number }}
+    </a>
+  </li>
+</ul>

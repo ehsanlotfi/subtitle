@@ -1,24 +1,12 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AppComponent } from './app.component';
-import { ListComponent } from './pages/list/list.component';
+import * as _pages from 'src/app/pages';
+
 
 const routes: Routes = [
-  { path: '', redirectTo: 'app', pathMatch: 'full' },
-  {
-    path: 'app',
-    component: AppComponent,
-    children: [
-      { path: '', redirectTo: 'list', pathMatch: 'full' },
-      {
-        path: 'list',
-        component: ListComponent,
-      },
-
-
-    ],
-
-  },
+  { path: '', component: _pages.HomeComponent },
+  { path: 'seasons', component: _pages.SeasonsComponent },
+  { path: 'seasons/:id/episodes', component: _pages.EpisodesComponent }
 ];
 
 @NgModule({

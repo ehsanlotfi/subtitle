@@ -1,17 +1,23 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { AppRoutingModule } from './app-routing.module';
+import { FormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 import { AppComponent } from './app.component';
-import { ListComponent } from './pages/list/list.component';
+import { AppRoutingModule } from './app-routing.module';
+import * as _pages from 'src/app/pages';
 
 @NgModule({
   declarations: [
     AppComponent,
-
-    ListComponent
+    _pages.HomeComponent,
+    _pages.SeasonsComponent,
+    _pages.EpisodesComponent,
+    _pages.QuotesComponent
   ],
   imports: [
     BrowserModule,
+    FormsModule,
+    HttpClientModule,
     AppRoutingModule
   ],
   providers: [],

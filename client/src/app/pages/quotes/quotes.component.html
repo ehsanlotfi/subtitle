@@ -1,0 +1,21 @@
+<h2>Friends Quotes</h2>
+
+<section>
+  <ul>
+    <li *ngFor="let quote of quotes">
+      <span>{{ quote.text }}</span>
+      <span>{{ quote.translation }}</span>
+      <button (click)="onPin(quote)">Pin</button>
+    </li>
+  </ul>
+</section>
+
+<section>
+  <h3>Pinned Quotes</h3>
+  <ul>
+    <li *ngFor="let quote of pinnedQuotes">
+      <span>{{ quote.text }}</span>
+      <span>{{ quote.translation }}</span>
+    </li>
+  </ul>
+</section>
