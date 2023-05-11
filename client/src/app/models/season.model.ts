@@ -1,4 +1,12 @@
+import { Episode } from "./episode.model";
+
 export interface Season {
-    id: number;
-    number: number
+    number: number;
+    title: string;
+    date: string;
+    director: string;
+    writers: string[];
+    stars: string[];
+    summary: string;
+    episodes?: Episode[];
 }

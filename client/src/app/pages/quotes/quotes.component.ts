@@ -12,10 +12,10 @@ export class QuotesComponent implements OnInit {
   quotes: _mod.Quote[] = [];
   pinnedQuotes: _mod.Quote[] = [];
 
-  constructor(private quotesService: _svc.QuotesService) { }
+  constructor(private globalService: _svc.GlobalService,) { }
 
   ngOnInit(): void {
-    this.quotes = this.quotesService.getQuotes();
+    //  this.quotes = this.quotesService.getQuotes();
   }
 
   onPin(quote: _mod.Quote) {

@@ -9,8 +9,8 @@ import * as _pages from 'src/app/pages';
 @NgModule({
   declarations: [
     AppComponent,
-    _pages.HomeComponent,
     _pages.SeasonsComponent,
+    _pages.LayoutComponent,
     _pages.EpisodesComponent,
     _pages.QuotesComponent
   ],

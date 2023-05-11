@@ -11,10 +11,10 @@ export class SeasonsComponent implements OnInit {
 
   seasons: _mod.Season[] = [];
 
-  constructor(private seasonsService: _svc.SeasonsService) { }
+  constructor(private globalService: _svc.GlobalService,) { }
 
   ngOnInit(): void {
-    this.seasons = this.seasonsService.getSeasons();
+    this.seasons = this.globalService.getSeasons();
   }
 
 }

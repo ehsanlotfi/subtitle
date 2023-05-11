@@ -1,5 +1,5 @@
 export interface Episode {
-    id: number;
-    seasonId: number, 
-    title: string
+    number: number;
+    title: string,
+    summary: string
 }

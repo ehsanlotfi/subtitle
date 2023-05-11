@@ -5,9 +5,13 @@ import * as _pages from 'src/app/pages';
 
 const routes: Routes = [
   { path: '', component: _pages.SplashComponent },
-  { path: 'home', component: _pages.HomeComponent },
-  { path: 'seasons', component: _pages.SeasonsComponent },
-  { path: 'seasons/:id/episodes', component: _pages.EpisodesComponent }
+  {
+    path: 'app', component: _pages.LayoutComponent, children: [
+      { path: '', component: _pages.SeasonsComponent },
+      { path: ':seasonId', component: _pages.EpisodesComponent },
+      { path: ':seasonId/:episodeId', component: _pages.QuotesComponent }
+    ]
+  }
 ];
 
 @NgModule({

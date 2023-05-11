@@ -13,13 +13,13 @@ export class EpisodesComponent implements OnInit {
   episodes: _mod.Episode[] = [];
 
   constructor(
-    private episodesService: _svc.EpisodesService,
+    private globalService: _svc.GlobalService,
     private route: ActivatedRoute
   ) { }
 
   ngOnInit(): void {
     const seasonId = this.route.snapshot.paramMap.get('id');
-    this.episodes = this.episodesService.getEpisodes(seasonId!);
+  //  this.episodes = this.globalService.getEpisodes(seasonId!);
   }
 
 }
