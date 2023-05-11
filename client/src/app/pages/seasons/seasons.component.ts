@@ -14,7 +14,7 @@ export class SeasonsComponent implements OnInit {
   constructor(private globalService: _svc.GlobalService,) { }
 
   ngOnInit(): void {
-    this.seasons = this.globalService.getSeasons();
+    this.seasons = this.globalService.getAllSeasons();
   }
 
 }

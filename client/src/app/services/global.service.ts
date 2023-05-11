@@ -6,6 +6,16 @@ import * as _mod from 'src/app/models';
 })
 export class GlobalService {
 
+  constructor() { }
+
+  getAllSeasons(): _mod.Season[] {
+    return this.seasons.map(({ episodes, ...rest }) => rest);
+  }
+
+  getAllEpisode(seasonId: number): _mod.Season[] {
+    return this.seasons.filter(f => f.number == seasonId);
+  }
+
   private seasons: _mod.Season[] = [
     {
       "title": "دورهمی دوستان و معرفی شخصیت‌ها",
@@ -715,11 +725,5 @@ export class GlobalService {
       "episodes": []
     }
   ];
-
-  constructor() { }
-
-  getSeasons(): _mod.Season[] {
-    return this.seasons;
-  }
 
 }

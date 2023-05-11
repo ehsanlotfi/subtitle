@@ -10,7 +10,7 @@ import * as _mod from 'src/app/models';
 })
 export class EpisodesComponent implements OnInit {
 
-  episodes: _mod.Episode[] = [];
+  seasons: _mod.Season[] = [];
 
   constructor(
     private globalService: _svc.GlobalService,
@@ -18,8 +18,10 @@ export class EpisodesComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    const seasonId = this.route.snapshot.paramMap.get('id');
-  //  this.episodes = this.globalService.getEpisodes(seasonId!);
+    const seasonId = this.route.snapshot.paramMap.get('seasonId');
+    this.seasons = this.globalService.getAllEpisode(+seasonId!);
+    debugger
+    //  this.episodes = this.globalService.getEpisodes(seasonId!);
   }
 
 }

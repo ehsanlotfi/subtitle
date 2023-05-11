@@ -1,8 +1,29 @@
-<div class="container">
-  <ul class="list-group">
-    <li class="list-group-item"
-        *ngFor="let episode of episodes">
-      {{ episode.title }}
-    </li>
-  </ul>
+<div class="rtl px-2">
+
+  <div *ngFor="let season of seasons">
+
+    <div class="season-details">
+      <img src="assets/img/friends.jfif" class="w-25 img-thumbnail">
+      <h5>فصل: <b>{{ season.number }}</b></h5>
+      <h6>{{ season.title }}</h6>
+      <p>{{ season.summary }}</p>
+      <span>تاریخ انتشار: <b>{{ season.date }}</b></span>
+      <span>کارگردان: <b>{{ season.director }}</b></span>
+      <span>نویسنده: <b>{{ season.writers.join(', ') }}</b></span>
+      <span>بازیگران: <b>{{ season.stars.join(', ') }}</b></span>
+    </div>
+
+    <div *ngFor="let episode of season.episodes" class="d-flex border rounded-3 border-2 mb-2"
+      [routerLink]="['/app', season.number, episode.number]">
+      <div class="w-75 pe-2">
+        <h5>قسمت: <b>{{ episode.number }}</b></h5>
+        <h6>{{ episode.title }}</h6>
+        <p>{{ episode.summary }}</p>
+      </div>
+    </div>
+
+
+
+  </div>
+
 </div>
