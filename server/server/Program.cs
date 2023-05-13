@@ -15,7 +15,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 using var dbContext = new MyDbContext();
 
-string[] files = Directory.GetFiles("wwwroot/friends", "*.srt");
+string[] files = Directory.GetFiles("wwwroot/friends", "9*.srt");
 
 var translator = new AggregateTranslator();
 
@@ -26,11 +26,11 @@ foreach (var filePath in files)
 
     string fileName = Path.GetFileName(filePath);
     MatchCollection matches = Regex.Matches(fileName, @"(?<=\()[^)]+(?=\))");
-    int Session = int.Parse(fileName.Split(" ")[0]);
+    int Season = int.Parse(fileName.Split(" ")[0]);
     int Capture = int.Parse(matches[0].Value);
 
     string content = await ParseSRT(filePath);
-    List<Translate>? list = await setTranslate(content, Session, Capture);
+    List<Translate>? list = await setTranslate(content, Season, Capture);
     await dbContext.Translates.AddRangeAsync(list);
     await dbContext.SaveChangesAsync();
 }
@@ -38,7 +38,7 @@ foreach (var filePath in files)
 
 
 
-async Task<List<Translate>?> setTranslate(string text, int Session, int Capture)
+async Task<List<Translate>?> setTranslate(string text, int Season, int Capture)
 {
 
     string[] textLines = text.Split('\n');
@@ -55,7 +55,7 @@ async Task<List<Translate>?> setTranslate(string text, int Session, int Capture)
         {
         Content = SourceList[i].Replace("\r", ""),
         Trans = TranslationList[i].Replace("\r", ""),
-        Session = Session,
+        Season = Season,
         Capture = Capture
         });
     }
@@ -169,7 +169,7 @@ public class Translate
     public int ID { get; set; }
     public string Content { get; set; }
     public string Trans { get; set; }
-    public int Session { get; set; }
+    public int Season { get; set; }
     public int Capture { get; set; }
 }
 
