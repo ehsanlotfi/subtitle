@@ -1,5 +1,9 @@
-export interface Quote {
+export interface Quote
+{
     id: number;
-    text: string, 
-    translation: string
+    content: string,
+    trans: string,
+    season: number,
+    capture: number,
+    pin: boolean
 }

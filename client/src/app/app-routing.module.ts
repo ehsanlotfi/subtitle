@@ -11,7 +11,19 @@ const routes: Routes = [
       { path: ':seasonId', component: _pages.EpisodesComponent },
       { path: ':seasonId/:episodeId', component: _pages.QuotesComponent }
     ]
-  }
+  },
+  {
+    path: 'bookmark', component: _pages.LayoutComponent, children: [
+      { path: '', component: _pages.SeasonsComponent },
+      { path: ':seasonId', component: _pages.EpisodesComponent },
+      { path: ':seasonId/:episodeId', component: _pages.QuotesComponent }
+    ]
+  },
+  {
+    path: 'about', component: _pages.LayoutComponent, children: [
+      { path: '', component: _pages.AboutUsComponent },
+    ]
+  },
 ];
 
 @NgModule({

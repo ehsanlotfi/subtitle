@@ -1,7 +1,9 @@
 import { Episode } from "./episode.model";
 
-export interface Season {
+export interface Season
+{
     number: number;
+    season: string;
     title: string;
     date: string;
     director: string;

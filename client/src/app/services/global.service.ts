@@ -4,22 +4,32 @@ import * as _mod from 'src/app/models';
 @Injectable({
   providedIn: 'root'
 })
-export class GlobalService {
+export class GlobalService
+{
 
   constructor() { }
 
-  getAllSeasons(): _mod.Season[] {
+  getAllSeasons(): _mod.Season[]
+  {
     return this.seasons.map(({ episodes, ...rest }) => rest);
   }
 
-  getAllEpisode(seasonId: number): _mod.Season[] {
+  getAllEpisode(seasonId: number): _mod.Season[]
+  {
     return this.seasons.filter(f => f.number == seasonId);
   }
+
+  getAllQuote(seasonId: number, episodeId: number): _mod.Quote[]
+  {
+    return this.quotes;
+  }
+
 
   private seasons: _mod.Season[] = [
     {
       "title": "دورهمی دوستان و معرفی شخصیت‌ها",
       "number": 1,
+      "season": "اول",
       "date": "24 سپتامبر 1994",
       "director": "جیمز بوراولز",
       "writers": ["دیوید کرین", "مارتا کافمن"],
@@ -152,6 +162,7 @@ export class GlobalService {
     {
       "title": "روابط عاطفی بین شخصیت‌ها",
       "number": 2,
+      "season": "دوم",
       "date": "21 سپتامبر 1995",
       "director": "مایکل لمباردی",
       "writers": ["دیوید کرین", "مارتا کافمن"],
@@ -284,6 +295,7 @@ export class GlobalService {
     {
       "title": "عملکرد حرفه‌ای شخصیت‌ها",
       "number": 3,
+      "season": "سوم",
       "date": "19 سپتامبر 1996",
       "director": "کوین سایبر",
       "writers": ["دیوید کرین", "مارتا کافمن"],
@@ -415,6 +427,7 @@ export class GlobalService {
     {
       "title": "روابط پیچیده و آشفته بین شخصیت‌ها",
       "number": 4,
+      "season": "چهارم",
       "date": "25 سپتامبر 1997",
       "director": "پیتر بون",
       "writers": ["دیوید کرین", "مارتا کافمن"],
@@ -546,6 +559,7 @@ export class GlobalService {
     {
       "title": "ترکیبی از خنده و درد در زندگی شخصیت‌ها",
       "number": 5,
+      "season": "پنجم",
       "date": "24 سپتامبر 1998",
       "director": "مایکل لمباردی",
       "writers": ["گرگ مالین", "آدام چیسنم"],
@@ -677,6 +691,7 @@ export class GlobalService {
     {
       "title": "شروع روابط جدید و پایان روابط قدیمی بین شخصیت‌ها",
       "number": 6,
+      "season": "ششم",
       "date": "23 سپتامبر 1999",
       "director": "کوین برایت",
       "writers": ["آندرها مایکلز"],
@@ -687,6 +702,7 @@ export class GlobalService {
     {
       "title": "پیشرفت شخصیت‌ها در حرفه و زندگی شخصی",
       "number": 7,
+      "season": "هفتم",
       "date": "12 اکتبر 2000",
       "director": "گری هالفرد",
       "writers": ["جوانا گرین", "فردریک ریچ"],
@@ -697,6 +713,7 @@ export class GlobalService {
     {
       "title": "برخورد با فشار و تحولات در زندگی شخصیت‌ها",
       "number": 8,
+      "season": "هشتم",
       "date": "27 سپتامبر 2001",
       "director": "کوین برایت",
       "writers": ["شانلی گونزالس"],
@@ -707,6 +724,7 @@ export class GlobalService {
     {
       "title": "روابط عاشقانه و بازگرداندن به گذشته",
       "number": 9,
+      "season": "نهم",
       "date": "26 سپتامبر 2002",
       "director": "گری هالفرد",
       "writers": ["آندرها مایکلز"],
@@ -717,12 +735,40 @@ export class GlobalService {
     {
       "title": " اتفاقات غیر منتظره و شوخی‌های بزرگانه",
       "number": 10,
+      "season": "دهم",
       "date": "25 سپتامبر 2003",
       "director": "کوین سایبر",
       "writers": ["مارتا کافمن"],
       "stars": ["آیشا تایلر"],
       "summary": "تغییرات زندگی و اختلافات روابطی.",
       "episodes": []
+    }
+  ];
+
+  private quotes: _mod.Quote[] = [
+    {
+      id: 1,
+      content: "The best way to predict the future is to invent it.",
+      trans: "بهترین روش برای پیش‌بینی آینده، اختراع آن است.",
+      season: 1,
+      capture: 1,
+      pin: true
+    },
+    {
+      id: 2,
+      content: "It does not matter how slowly you go as long as you do not stop.",
+      trans: "مهم نیست چقدر آهسته پیش می‌روید، تا آنجایی که متوقف نشوید.",
+      season: 2,
+      capture: 7,
+      pin: false
+    },
+    {
+      id: 3,
+      content: "Success is not final, failure is not fatal: It is the courage to continue that counts.",
+      trans: "موفقیت نهایی نیست، شکست مرگبار نیست؛ شجاعت برای ادامه به شمار می‌آید.",
+      season: 3,
+      capture: 12,
+      pin: true
     }
   ];
 

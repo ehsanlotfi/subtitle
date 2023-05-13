@@ -1,21 +1,13 @@
-<h2>Friends Quotes</h2>
+<app-header [title]="title" (click)="back()">
+  <i left class="fa fa-arrow-right"></i>
+</app-header>
 
-<section>
-  <ul>
-    <li *ngFor="let quote of quotes">
-      <span>{{ quote.text }}</span>
-      <span>{{ quote.translation }}</span>
-      <button (click)="onPin(quote)">Pin</button>
-    </li>
-  </ul>
-</section>
-
-<section>
-  <h3>Pinned Quotes</h3>
-  <ul>
-    <li *ngFor="let quote of pinnedQuotes">
-      <span>{{ quote.text }}</span>
-      <span>{{ quote.translation }}</span>
-    </li>
-  </ul>
-</section>
+<div class="container-fluid">
+  <div *ngFor="let quote of quotes" class="mb-2 border rounded-1 p-3">
+    <h5 class="ltr d-flex mb-2 text-1">
+      <span class="w-100">{{ quote.content }}</span>
+      <i class="fa fa-bookmark text-5" (click)="quote.pin = !quote.pin" [class.text-success]="quote.pin"></i>
+    </h5>
+    <h6 class="rtl text-4">{{ quote.trans }}</h6>
+  </div>
+</div>

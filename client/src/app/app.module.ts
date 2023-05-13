@@ -12,7 +12,10 @@ import * as _pages from 'src/app/pages';
     _pages.SeasonsComponent,
     _pages.LayoutComponent,
     _pages.EpisodesComponent,
-    _pages.QuotesComponent
+    _pages.SplashComponent,
+    _pages.QuotesComponent,
+    _pages.AboutUsComponent,
+    _pages.HeaderComponent
   ],
   imports: [
     BrowserModule,
@@ -24,3 +27,4 @@ import * as _pages from 'src/app/pages';
   bootstrap: [AppComponent]
 })
 export class AppModule { }
+

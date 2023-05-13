@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import * as _svc from 'src/app/services';
 import * as _mod from 'src/app/models';
 
@@ -8,20 +8,28 @@ import * as _mod from 'src/app/models';
   templateUrl: './episodes.component.html',
   styleUrls: ['./episodes.component.scss']
 })
-export class EpisodesComponent implements OnInit {
+export class EpisodesComponent implements OnInit
+{
 
+  title: string = "";
   seasons: _mod.Season[] = [];
 
   constructor(
     private globalService: _svc.GlobalService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router,
   ) { }
 
-  ngOnInit(): void {
+  ngOnInit(): void
+  {
     const seasonId = this.route.snapshot.paramMap.get('seasonId');
     this.seasons = this.globalService.getAllEpisode(+seasonId!);
-    debugger
+    this.title = `فصل ${this.seasons[0].season}`;
     //  this.episodes = this.globalService.getEpisodes(seasonId!);
+  }
+
+  back() {
+    this.router.navigate(['/app']);
   }
 
 }

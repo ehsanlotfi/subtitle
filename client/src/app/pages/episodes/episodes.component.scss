@@ -1,39 +1,4 @@
-// First, let's define some variables to use later on
-$font-size-base: 1rem;
-$primary-color: #007bff;
-$secondary-color: #6c757d;
-$light-color: #f8f9fa;
-$heading-font-family: "Segoe UI", sans-serif;
-
-// Define our styles for the component
-.app-friends-episodes {
-  .container {
-    margin-top: 2rem;
-  }
-
-  .list-group-item {
-    background-color: $light-color;
-    border-color: $light-color;
-    color: $secondary-color;
-    font-size: $font-size-base;
-    font-family: $heading-font-family;
-    font-weight: bold;
-    transition: all ease-in-out 0.2s;
-
-    &:hover {
-      background-color: $primary-color;
-      cursor: pointer;
-      color: #fff;
-    }
-
-    &:last-child {
-      border-bottom-right-radius: 0.25rem;
-      border-bottom-left-radius: 0.25rem;
-    }
-
-    &:first-child {
-      border-top-right-radius: 0.25rem;
-      border-top-left-radius: 0.25rem;
-    }
-  }
+.episode-list {
+  height: 60vh;
+  overflow: scroll;
 }
