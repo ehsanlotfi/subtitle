@@ -1,10 +1,18 @@
-import { NgModule } from '@angular/core';
+import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import * as _pages from 'src/app/pages';
+import { SQLiteService } from './services/sqlite.service';
+import { DbnameVersionService } from './services/dbname-version.service';
+import { InitializeAppService } from './services/initialize.app.service';
+
+export function initializeFactory(init: InitializeAppService)
+{
+  return () => init.initializeApp();
+}
 
 @NgModule({
   declarations: [
@@ -23,7 +31,17 @@ import * as _pages from 'src/app/pages';
     HttpClientModule,
     AppRoutingModule
   ],
-  providers: [],
+  providers: [
+    SQLiteService,
+    InitializeAppService,
+    DbnameVersionService,
+    {
+      provide: APP_INITIALIZER,
+      useFactory: initializeFactory,
+      deps: [InitializeAppService],
+      multi: true
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
