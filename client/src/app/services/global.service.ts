@@ -1,5 +1,8 @@
 import { Injectable } from '@angular/core';
 import * as _mod from 'src/app/models';
+import { Capacitor } from '@capacitor/core';
+import { SQLiteService } from './sqlite.service';
+import { Observable, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -7,7 +10,7 @@ import * as _mod from 'src/app/models';
 export class GlobalService
 {
 
-  constructor() { }
+  constructor(private readonly _sqlite: SQLiteService) { }
 
   getAllSeasons(): _mod.Season[]
   {
@@ -19,9 +22,16 @@ export class GlobalService
     return this.seasons.filter(f => f.number == seasonId);
   }
 
-  getAllQuote(seasonId: number, episodeId: number): _mod.Quote[]
+  getAllQuote(seasonId: number, episodeId: number): Observable<_mod.Quote[]>
   {
-    return this.quotes;
+    if (Capacitor.isNativePlatform())
+    {
+      return this._sqlite.queryObservable<_mod.Quote>(`SELECT  * FROM Translates Where Season = ${seasonId} AND Capture = ${episodeId}`);
+    } else
+    {
+      return of(this.quotes);
+    }
+
   }
 
 
@@ -745,31 +755,6 @@ export class GlobalService
     }
   ];
 
-  private quotes: _mod.Quote[] = [
-    {
-      id: 1,
-      content: "The best way to predict the future is to invent it.",
-      trans: "بهترین روش برای پیش‌بینی آینده، اختراع آن است.",
-      season: 1,
-      capture: 1,
-      pin: true
-    },
-    {
-      id: 2,
-      content: "It does not matter how slowly you go as long as you do not stop.",
-      trans: "مهم نیست چقدر آهسته پیش می‌روید، تا آنجایی که متوقف نشوید.",
-      season: 2,
-      capture: 7,
-      pin: false
-    },
-    {
-      id: 3,
-      content: "Success is not final, failure is not fatal: It is the courage to continue that counts.",
-      trans: "موفقیت نهایی نیست، شکست مرگبار نیست؛ شجاعت برای ادامه به شمار می‌آید.",
-      season: 3,
-      capture: 12,
-      pin: true
-    }
-  ];
+  private quotes: _mod.Quote[] = [];
 
 }

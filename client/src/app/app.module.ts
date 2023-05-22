@@ -6,7 +6,6 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import * as _pages from 'src/app/pages';
 import { SQLiteService } from './services/sqlite.service';
-import { DbnameVersionService } from './services/dbname-version.service';
 import { InitializeAppService } from './services/initialize.app.service';
 
 export function initializeFactory(init: InitializeAppService)
@@ -34,7 +33,6 @@ export function initializeFactory(init: InitializeAppService)
   providers: [
     SQLiteService,
     InitializeAppService,
-    DbnameVersionService,
     {
       provide: APP_INITIALIZER,
       useFactory: initializeFactory,

@@ -1,221 +1,135 @@
 import { Injectable } from '@angular/core';
-
+import { CapacitorSQLite } from '@capacitor-community/sqlite';
 import { Capacitor } from '@capacitor/core';
-import
-{
-    CapacitorSQLite, SQLiteConnection, SQLiteDBConnection, CapacitorSQLitePlugin,
-    capSQLiteUpgradeOptions, capSQLiteResult, capSQLiteValues
-} from '@capacitor-community/sqlite';
-import { DbnameVersionService } from './dbname-version.service';
+import { FilesystemPlugin, Filesystem, Directory } from '@capacitor/filesystem';
+import { Observable, from, map, mergeMap } from 'rxjs';
 
-
-@Injectable()
-
+@Injectable({
+    providedIn: "root"
+})
 export class SQLiteService
 {
-    sqliteConnection!: SQLiteConnection;
-    isService: boolean = false;
-    platform!: string;
-    sqlitePlugin!: CapacitorSQLitePlugin;
-    native: boolean = false;
-    constructor(private dbVerService: DbnameVersionService)
+    private database = "subtitle.db";
+    private readonly = false;
+    private version = 1;
+    private transaction = false;
+    private encrypted = false;
+
+    private async copyDB()
     {
-    }
-    /**
-     * Plugin Initialization
-     */
-    async initializePlugin(): Promise<boolean>
-    {
-        this.platform = Capacitor.getPlatform();
-        if (this.platform === 'ios' || this.platform === 'android') this.native = true;
-        this.sqlitePlugin = CapacitorSQLite;
-        this.sqliteConnection = new SQLiteConnection(this.sqlitePlugin);
-        this.isService = true;
-        return true;
+        /*
+         دیتابیسی که در مسیر assets/databases
+         قرار بگیره را کپی میکند برای استفاده در اندروید
+         */
+        const uri = await Filesystem.getUri({
+            directory: Directory.Data,
+            path: this.database,
+        });
+
+        await CapacitorSQLite.copyFromAssets({});
     }
 
-    async initWebStore(): Promise<void>
+    private async createConnection()
     {
-        try
-        {
-            await this.sqliteConnection.initWebStore();
-        } catch (err: any)
-        {
-            const msg = err.message ? err.message : err;
-            return Promise.reject(`initWebStore: ${err}`);
-        }
+        return await CapacitorSQLite.createConnection({
+            database: this.database,
+            version: this.version,
+            encrypted: this.encrypted,
+        });
     }
 
-    async openDatabase(dbName: string, encrypted: boolean, mode: string, version: number, readonly: boolean): Promise<SQLiteDBConnection>
+    private async isOpen()
     {
-        let db: SQLiteDBConnection;
-        const retCC = (await this.sqliteConnection.checkConnectionsConsistency()).result;
-        let isConn = (await this.sqliteConnection.isConnection(dbName, readonly)).result;
-        if (retCC && isConn)
-        {
-            db = await this.sqliteConnection.retrieveConnection(dbName, readonly);
-        } else
-        {
-            db = await this.sqliteConnection
-                .createConnection(dbName, encrypted, mode, version, readonly);
-        }
-        await db.open();
-        return db;
+        return await CapacitorSQLite.isDBOpen({
+            database: this.database
+        })
     }
-    async retrieveConnection(dbName: string, readonly: boolean): Promise<SQLiteDBConnection>
-    {
-        return await this.sqliteConnection.retrieveConnection(dbName, readonly);
-    }
-    async closeConnection(database: string, readonly?: boolean): Promise<void>
-    {
-        const readOnly = readonly ? readonly : false;
-        return await this.sqliteConnection.closeConnection(database, readOnly);
-    }
-    async addUpgradeStatement(options: capSQLiteUpgradeOptions): Promise<void>
-    {
-        await this.sqlitePlugin.addUpgradeStatement(options);
-        return;
-    }
-    async isInConfigEncryption(): Promise<capSQLiteResult>
-    {
-        return await this.sqliteConnection.isInConfigEncryption();
-    }
-    async isInConfigBiometricAuth(): Promise<capSQLiteResult>
-    {
-        return await this.sqliteConnection.isInConfigBiometricAuth();
-    }
-    async isDatabaseEncrypted(database: string): Promise<capSQLiteResult>
-    {
-        let res: capSQLiteResult = { result: false };
-        const isDB = (await this.sqliteConnection.isDatabase(database)).result;
-        if (!isDB)
-        {
-            return { result: false };
-        }
-        return await this.sqliteConnection.isDatabaseEncrypted(database);
-    }
-    async isSecretStored(): Promise<capSQLiteResult>
-    {
-        return await this.sqliteConnection.isSecretStored();
-    }
-    async setEncryptionSecret(passphrase: string): Promise<void>
-    {
-        return await this.sqliteConnection.setEncryptionSecret(passphrase);
-    }
-    async clearEncryptionSecret(): Promise<void>
-    {
-        return await this.sqliteConnection.clearEncryptionSecret();
-    }
-    async changeEncryptionSecret(passphrase: string, oldpassphrase: string): Promise<void>
-    {
-        return await this.sqliteConnection.changeEncryptionSecret(passphrase, oldpassphrase);
-    }
-    async checkEncryptionSecret(passphrase: string): Promise<capSQLiteResult>
-    {
-        return await this.sqliteConnection.checkEncryptionSecret(passphrase);
-    }
-    async getDatabaseList(): Promise<capSQLiteValues>
-    {
-        return await this.sqliteConnection.getDatabaseList();
-    }
-    async findOneBy(mDb: SQLiteDBConnection, table: string, where: any): Promise<any>
-    {
-        try
-        {
-            const key: string = Object.keys(where)[0];
-            const stmt: string = `SELECT * FROM ${table} WHERE ${key}=${where[key]};`
-            const retValues = (await mDb.query(stmt)).values;
-            const ret = retValues!.length > 0 ? retValues![0] : null;
-            return ret;
-        } catch (err: any)
-        {
-            const msg = err.message ? err.message : err;
-            return Promise.reject(`findOneBy err: ${msg}`);
-        }
-    }
-    async save(mDb: SQLiteDBConnection, table: string, mObj: any, where?: any): Promise<void>
-    {
-        const isUpdate: boolean = where ? true : false;
-        const keys: string[] = Object.keys(mObj);
-        let stmt: string = '';
-        let values: any[] = [];
-        for (const key of keys)
-        {
-            values.push(mObj[key]);
-        }
-        if (!isUpdate)
-        {
-            // INSERT
-            const qMarks: string[] = [];
-            for (const key of keys)
-            {
-                qMarks.push('?');
-            }
-            stmt = `INSERT INTO ${table} (${keys.toString()}) VALUES (${qMarks.toString()});`;
-        } else
-        {
-            // UPDATE
-            const wKey: string = Object.keys(where)[0];
 
-            const setString: string = await this.setNameForUpdate(keys);
-            if (setString.length === 0)
+    public async initDataBase()
+    {
+        if (Capacitor.isNativePlatform())
+        {
+            await this.copyDB();
+
+            try
             {
-                return Promise.reject(`save: update no SET`);
-            }
-            stmt = `UPDATE ${table} SET ${setString} WHERE ${wKey}=${where[wKey]}`;
+                await this.createConnection()
+            } catch { }
+
         }
-        const ret = await mDb.run(stmt, values);
-        if (ret.changes!.changes != 1)
-        {
-            return Promise.reject(`save: insert changes != 1`);
-        }
-        return;
+
     }
-    async unencryptCryptedDatabases(): Promise<void>
+
+    private async openConnection()
     {
-        const dbList: string[] = (await this.getDatabaseList()).values!;
-        for (let idx: number = 0; idx < dbList.length; idx++)
+        if (!((await this.isOpen()).result))
         {
-            const dbName = dbList[idx].split("SQLite.db")[0];
-            const isEncrypt = (await this.isDatabaseEncrypted(dbName)).result!;
-            if (isEncrypt)
+            await CapacitorSQLite.open({
+                database: this.database,
+                readonly: this.readonly
+            })
+        }
+
+    }
+
+    private async closeConnection()
+    {
+        await CapacitorSQLite.close({
+            database: this.database,
+            readonly: this.readonly
+        })
+    }
+
+    public async excute(query: string)
+    {
+
+        await this.openConnection();
+
+        await CapacitorSQLite.execute({
+            database: this.database,
+            statements: query,
+            readonly: this.readonly,
+            transaction: this.transaction
+        })
+
+        await this.closeConnection();
+    }
+
+    public async query<T>(query: string)
+    {
+        await this.openConnection();
+
+        const result = await CapacitorSQLite.query({
+            database: this.database,
+            statement: query,
+            readonly: this.readonly,
+            values: []
+        });
+
+        await this.closeConnection();
+
+        return result.values as T[];
+    }
+
+    public queryObservable<T>(query: string): Observable<T[]>
+    {
+        return from(this.openConnection()).pipe(mergeMap(open =>
+        {
+            const param = {
+                database: this.database,
+                statement: query,
+                readonly: this.readonly,
+                values: []
+            };
+            return from(CapacitorSQLite.query(param)).pipe(map(result =>
             {
-                const version = this.dbVerService.getVersion(dbName)!;
-                const db = await this.openDatabase(dbName, true, "secret",
-                    version, false);
-                const jsonDB = (await db.exportToJson("full")).export!;
-                jsonDB.overwrite = true;
-                jsonDB.encrypted = false;
-                const res = await this.sqliteConnection.importFromJson(JSON.stringify(jsonDB));
-            }
-        }
+                from(this.closeConnection());
+                return result.values as T[];
+            }))
+        }));
     }
-    async remove(mDb: SQLiteDBConnection, table: string, where: any): Promise<void>
-    {
-        const key: string = Object.keys(where)[0];
-        const stmt: string = `DELETE FROM ${table} WHERE ${key}=${where[key]};`
-        const ret = await mDb.run(stmt);
-        return;
-    }
-    /**
-     * SetNameForUpdate
-     * @param names
-     */
-    private async setNameForUpdate(names: string[]): Promise<string>
-    {
-        let retString = '';
-        for (const name of names)
-        {
-            retString += `${name} = ? ,`;
-        }
-        if (retString.length > 1)
-        {
-            retString = retString.slice(0, -1);
-            return retString;
-        } else
-        {
-            return Promise.reject('SetNameForUpdate: length = 0');
-        }
-    }
+
+
+
 
 }

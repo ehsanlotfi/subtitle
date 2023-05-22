@@ -1,9 +1,8 @@
 export interface Quote
 {
-    id: number;
-    content: string,
-    trans: string,
-    season: number,
+    Id: number;
+    Content: string,
+    Trans: string,
+    Season: number,
     capture: number,
-    pin: boolean
 }

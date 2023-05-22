@@ -32,7 +32,10 @@ export class QuotesComponent implements OnInit
 
   getData()
   {
-    this.quotes = this.globalService.getAllQuote(this.seasonId, this.episodeId);
+    this.globalService.getAllQuote(this.seasonId, this.episodeId).subscribe(data =>
+    {
+      this.quotes = data;
+    });
   }
 
   back()
