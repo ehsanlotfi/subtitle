@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import * as _mod from 'src/app/models';
 import { Capacitor } from '@capacitor/core';
 import { SQLiteService } from './sqlite.service';
-import { Observable, of } from 'rxjs';
+import { Observable, map, of } from 'rxjs';
 import { fakeData } from './fake-data';
 import { seasonsData } from './season.data';
 import { capSQLiteChanges } from '@capacitor-community/sqlite';
@@ -60,7 +60,11 @@ export class GlobalService
 
     if (Capacitor.isNativePlatform())
     {
-      return this._sqlite.queryObservable<_mod.Quote>(query);
+      return this._sqlite.queryObservable<_mod.Quote>(query).pipe(map(data =>
+      {
+        data.forEach(item => item.showTrans = false);
+        return data;
+      }));
     } else
     {
       return of(fakeData);

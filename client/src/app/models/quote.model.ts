@@ -7,12 +7,13 @@ export enum QuoteType
 
 export interface Quote
 {
-    Id: number;
+    ID: number;
     Content: string,
     Trans: string,
     Season: number,
     Capture: number,
     Type: QuoteType,
     DateSeen: number,
-    CntSeen: number
+    CntSeen: number,
+    showTrans?: boolean
 }

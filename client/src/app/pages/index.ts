@@ -6,3 +6,4 @@ export * from "./splash/splash.component";
 export * from "../partial/layout/layout.component";
 export * from "./about-us/about-us.component";
 export * from "../partial/header/header.component";
+export * from "./leitner-list/leitner-list.component";

@@ -23,7 +23,8 @@ export function initializeFactory(init: InitializeAppService)
     _pages.SplashComponent,
     _pages.QuotesComponent,
     _pages.AboutUsComponent,
-    _pages.HeaderComponent
+    _pages.HeaderComponent,
+    _pages.LeitnerListComponent,
   ],
   imports: [
     BrowserModule,

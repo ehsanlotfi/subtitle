@@ -38,10 +38,18 @@ export class QuotesComponent implements OnInit
     });
   }
 
+  setLeitnerCard(quote: _mod.Quote)
+  {
+    quote.CntSeen = 1;
+    this.globalService.setLeitnerCard(quote.ID).subscribe();
+  }
+
   back()
   {
     this.router.navigate(['/app', this.seasonId]);
   }
+
+
 
 
 }

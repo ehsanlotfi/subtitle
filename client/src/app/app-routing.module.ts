@@ -14,6 +14,11 @@ const routes: Routes = [
     ]
   },
   {
+    path: 'leitner', component: _pages.LayoutComponent, children: [
+      { path: '', component: _pages.LeitnerListComponent },
+    ]
+  },
+  {
     path: 'about', component: _pages.LayoutComponent, children: [
       { path: '', component: _pages.AboutUsComponent },
     ]
