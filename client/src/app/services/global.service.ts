@@ -5,6 +5,7 @@ import { SQLiteService } from './sqlite.service';
 import { Observable, of } from 'rxjs';
 import { fakeData } from './fake-data';
 import { seasonsData } from './season.data';
+import { capSQLiteChanges } from '@capacitor-community/sqlite';
 
 @Injectable({
   providedIn: 'root'
@@ -34,6 +35,51 @@ export class GlobalService
     } else
     {
       return of(fakeData);
+    }
+  }
+
+  setLeitnerCard(id: number): Observable<capSQLiteChanges>
+  {
+    const query = `UPDATE Translates SET TYPE = 2, DateSeen = strftime('%s', 'now'), CntSeen = 1 WHERE ID = ${id}`;
+
+    if (Capacitor.isNativePlatform())
+    {
+      return this._sqlite.excuteObservable(query);
+    } else
+    {
+      return of();
+    }
+  }
+
+  getCards(): Observable<_mod.Quote[]>
+  {
+    const query = `SELECT  * FROM Translates WHERE
+      (DateSeen > strftime('%s', 'now', '-7 days') AND Type = 0 AND CntSeen < 4) OR
+      (DateSeen > strftime('%s', 'now', '-3 days') AND Type = 1) OR
+      (DateSeen > strftime('%s', 'now', '-1 days') AND Type = 2)`;
+
+    if (Capacitor.isNativePlatform())
+    {
+      return this._sqlite.queryObservable<_mod.Quote>(query);
+    } else
+    {
+      return of(fakeData);
+    }
+  }
+
+  setLeitnerType(id: number, type: _mod.QuoteType)
+  {
+
+    const query = type == _mod.QuoteType.EASY ?
+      `UPDATE Translates SET TYPE = ${type}, DateSeen = strftime('%s', 'now'), CntSeen = CntSeen + 1 WHERE ID = ${id}` :
+      `UPDATE Translates SET TYPE = ${type}, DateSeen = strftime('%s', 'now') WHERE ID = ${id}`;
+
+    if (Capacitor.isNativePlatform())
+    {
+      return this._sqlite.excuteObservable(query);
+    } else
+    {
+      return of();
     }
 
   }

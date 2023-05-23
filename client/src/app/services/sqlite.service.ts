@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CapacitorSQLite } from '@capacitor-community/sqlite';
+import { CapacitorSQLite, capSQLiteChanges } from '@capacitor-community/sqlite';
 import { Capacitor } from '@capacitor/core';
 import { FilesystemPlugin, Filesystem, Directory } from '@capacitor/filesystem';
 import { Observable, from, map, mergeMap } from 'rxjs';
@@ -93,6 +93,24 @@ export class SQLiteService
         })
 
         await this.closeConnection();
+    }
+
+    public excuteObservable(query: string): Observable<capSQLiteChanges>
+    {
+        return from(this.openConnection()).pipe(mergeMap(open =>
+        {
+            const param = {
+                database: this.database,
+                statements: query,
+                readonly: this.readonly,
+                transaction: this.transaction
+            };
+            return from(CapacitorSQLite.execute(param)).pipe(map(result =>
+            {
+                from(this.closeConnection());
+                return result;
+            }))
+        }));
     }
 
     public async query<T>(query: string)
