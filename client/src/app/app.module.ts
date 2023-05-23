@@ -17,6 +17,7 @@ export function initializeFactory(init: InitializeAppService)
   declarations: [
     AppComponent,
     _pages.SeasonsComponent,
+    _pages.SeasonDetailsComponent,
     _pages.LayoutComponent,
     _pages.EpisodesComponent,
     _pages.SplashComponent,

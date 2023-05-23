@@ -8,15 +8,9 @@ const routes: Routes = [
   {
     path: 'app', component: _pages.LayoutComponent, children: [
       { path: '', component: _pages.SeasonsComponent },
-      { path: ':seasonId', component: _pages.EpisodesComponent },
-      { path: ':seasonId/:episodeId', component: _pages.QuotesComponent }
-    ]
-  },
-  {
-    path: 'bookmark', component: _pages.LayoutComponent, children: [
-      { path: '', component: _pages.SeasonsComponent },
-      { path: ':seasonId', component: _pages.EpisodesComponent },
-      { path: ':seasonId/:episodeId', component: _pages.QuotesComponent }
+      { path: ':seasonId/detail', component: _pages.SeasonDetailsComponent },
+      { path: ':seasonId/episods', component: _pages.EpisodesComponent },
+      { path: ':seasonId/episods/:episodeId', component: _pages.QuotesComponent }
     ]
   },
   {

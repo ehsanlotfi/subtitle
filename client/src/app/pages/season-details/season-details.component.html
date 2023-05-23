@@ -5,9 +5,10 @@
 <div class="page-content">
 
   <div *ngFor="let season of seasons">
+    <img src="assets/img/friends.jfif" class="w-100 rounded-4">
 
-    <div class="bg-theme-5 border-2 border-bottom border-theme-3 d-flex mb-3 p-3 season-details mn-1">
-      <img src="assets/img/friends.jfif" class="w-100 rounded-4">
+    <div class="border-2 d-flex mb-3 p-3 season-details mn-1">
+
       <div class="me-2">
         <h5 class="text-1">فصل: <b>{{ season.number }}</b></h5>
         <h6 class="text-1">{{ season.title }}</h6>
@@ -18,20 +19,7 @@
         <span class="d-block">بازیگران: <b class="text-1">{{ season.stars.join(', ') }}</b></span>
       </div>
     </div>
-
-    <div class="mt-4 episode-list">
-      <div *ngFor="let episode of season.episodes" class="d-flex border rounded-3 border-2 mb-2"
-        [routerLink]="['/app', season.number, 'episods', episode.number]">
-        <div class="w-75 pe-2">
-          <h5>قسمت: <b>{{ episode.number }}</b></h5>
-          <h6>{{ episode.title }}</h6>
-          <p>{{ episode.summary }}</p>
-        </div>
-      </div>
-    </div>
-
-
-
+    <button class="btn btn-primary w-100 mt-4">نمایش قسمت ها</button>
   </div>
 
 </div>
