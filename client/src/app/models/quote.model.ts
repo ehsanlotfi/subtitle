@@ -1,9 +1,19 @@
+export enum QuoteType
+{
+    EASY,
+    MEDIUM,
+    HARD
+}
+
 export interface Quote
 {
-    id: number;
-    content: string,
-    trans: string,
-    season: number,
-    capture: number,
-    pin: boolean
+    ID: number;
+    Content: string,
+    Trans: string,
+    Season: number,
+    Capture: number,
+    Type: QuoteType,
+    DateSeen: number,
+    CntSeen: number,
+    showTrans?: boolean
 }

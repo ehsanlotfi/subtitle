@@ -32,13 +32,24 @@ export class QuotesComponent implements OnInit
 
   getData()
   {
-    this.quotes = this.globalService.getAllQuote(this.seasonId, this.episodeId);
+    this.globalService.getAllQuote(this.seasonId, this.episodeId).subscribe(data =>
+    {
+      this.quotes = data;
+    });
+  }
+
+  setLeitnerCard(quote: _mod.Quote)
+  {
+    quote.CntSeen = 1;
+    this.globalService.setLeitnerCard(quote.ID).subscribe();
   }
 
   back()
   {
     this.router.navigate(['/app', this.seasonId]);
   }
+
+
 
 
 }

@@ -2,12 +2,12 @@
   <i left class="fa fa-arrow-right"></i>
 </app-header>
 
-<div class="rtl px-3 container-fluid">
+<div class="page-content">
 
   <div *ngFor="let season of seasons">
 
     <div class="bg-theme-5 border-2 border-bottom border-theme-3 d-flex mb-3 p-3 season-details mn-1">
-      <img src="assets/img/friends.jfif" class="w-25  rounded-4">
+      <img src="assets/img/friends.jfif" class="w-100 rounded-4">
       <div class="me-2">
         <h5 class="text-1">فصل: <b>{{ season.number }}</b></h5>
         <h6 class="text-1">{{ season.title }}</h6>
@@ -21,7 +21,7 @@
 
     <div class="mt-4 episode-list">
       <div *ngFor="let episode of season.episodes" class="d-flex border rounded-3 border-2 mb-2"
-        [routerLink]="['/app', season.number, episode.number]">
+        [routerLink]="['/app', season.number, 'episods', episode.number]">
         <div class="w-75 pe-2">
           <h5>قسمت: <b>{{ episode.number }}</b></h5>
           <h6>{{ episode.title }}</h6>
